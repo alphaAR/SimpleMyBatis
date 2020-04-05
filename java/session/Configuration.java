@@ -2,6 +2,11 @@ package session;
 
 import annotation.*;
 import binding.MapperRegistry;
+import executors.CachingExecutor;
+import executors.Executor;
+import executors.SimpleExecutor;
+import interceptor.LogPlugin;
+import plugin.Plugin;
 
 import java.io.File;
 import java.lang.annotation.Annotation;
@@ -28,6 +33,9 @@ public class Configuration {
     private final List<String> classPaths = new LinkedList<>();
     //用于缓存mapper接口，用在解析注解时
     private final List<Class<?>> mapperList = new LinkedList<>();
+
+    //用于缓存所有的Plugin插件
+    private final List<Plugin> plugins = new LinkedList<>();
 
     
     public Configuration() {
@@ -56,11 +64,30 @@ public class Configuration {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println(methodReturnTypeCache);
-        System.out.println(methodSqlCache);
-        System.out.println("----------");
+
+        /* 解析所有的plugin配置， 放入plugins */
+        scanForPlugins(this.propertyMap.getString("pluginPath"));
+
     }
 
+    public Executor getExecutor(){
+        Executor executor = null;
+        if (propertyMap.getString("cache.enabled").equals("true")) {
+            executor = (Executor) new CachingExecutor(new SimpleExecutor(this));
+        }else{
+            executor = new SimpleExecutor(this);
+        }
+        return executor;
+    }
+
+
+    public Executor getPluginExecutor(Object target){
+        /*对executor进行代理，在plugin中对executor的方法进行拦截 */
+        for (Plugin plugin : plugins){
+            target = plugin.getProxy(target);
+        }
+        return (Executor) target;
+    }
 
 
     public Map<String, Class<?>> getMethodReturnTypeCache() {
@@ -119,6 +146,11 @@ public class Configuration {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void scanForPlugins(String path){
+        //仿照scanForMapers 添加
+
     }
 
     private void scanFiles(File file){

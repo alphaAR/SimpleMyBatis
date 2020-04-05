@@ -14,6 +14,7 @@ public class Test {
     private static List<Class<?>> mapperList = new LinkedList<>();
 
     public static void main(String[] args) {
+/*
         SqlSession session = new SqlSession(new Configuration());
         if (null == session) {
             System.out.println("session is null!");
@@ -45,7 +46,7 @@ public class Test {
         System.out.println(empInfo);
         empMapper.updateEmp("赵六", 31, 35000.0, 5);
         System.out.println(empMapper.selectById(5));
-
+*/
 
 
 

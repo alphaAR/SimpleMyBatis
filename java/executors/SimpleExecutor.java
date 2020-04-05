@@ -1,5 +1,6 @@
 package executors;
 
+import interceptor.LogPlugin;
 import session.Configuration;
 
 public class SimpleExecutor extends BaseExecutor {

@@ -1,7 +1,6 @@
 package session;
 
 import executors.Executor;
-import executors.SimpleExecutor;
 
 import java.util.List;
 
@@ -11,7 +10,7 @@ public class SqlSession {
 
     public SqlSession(Configuration configuration) {
         this.configuration = configuration;
-        this.executor = new SimpleExecutor(configuration);
+        this.executor = this.configuration.getPluginExecutor(this.configuration.getExecutor());
     }
 
     public Configuration getConfiguration() {
