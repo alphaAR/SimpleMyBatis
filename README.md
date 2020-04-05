@@ -6,3 +6,4 @@ A simple version of Mybatis written by me, easy for beginners to learn the struc
 1. 通过mapper.xml中配置方法与SQL，实现对数据库的增删改查。
 2. 支持注解方式来代替mapper.xml中的配置
 3. 实现了一级缓存，二级缓存尚未实现。
+4. 增加了插件功能。
